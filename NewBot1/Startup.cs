@@ -30,6 +30,7 @@ namespace NewBot1
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            //QnA Maker Endpoint Settup
             services.AddSingleton(new QnAMakerEndpoint
             {
                 KnowledgeBaseId = Configuration.GetValue<string>($"QnAKnowledgebaseId"),
@@ -37,6 +38,16 @@ namespace NewBot1
                 Host = Configuration.GetValue<string>($"QnAEndpointHostName")
             });
 
+            //Storage for User and Conversation Data
+            var storage = new MemoryStorage();
+
+            //UserState passing in storage
+            var userState = new UserState(storage);
+            services.AddSingleton(userState);
+
+            //ConversationState passing in the storage layer
+            var conversationState = new ConversationState(storage);
+            services.AddSingleton(conversationState);
 
             // Create the Bot Framework Adapter with error handling enabled.
             services.AddSingleton<IBotFrameworkHttpAdapter, AdapterWithErrorHandler>();

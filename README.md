@@ -4,6 +4,6 @@ Made with C#/.NET, using Bot Framework, Emulator, Visual Studio, Ngrok, Yeoman, 
 
 TO ADD:
 
-QnA Maker;
-LUIS;
+QnA Maker -- DONE! ;
+LUIS -- Setting up...;
 ...

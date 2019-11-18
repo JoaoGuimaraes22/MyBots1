@@ -30,6 +30,18 @@ namespace NewBot1.Bots
            
         }
 
+        // ******  Make Changes To State Management  ******
+        //Sets and  classes to manage states
+        private BotState _conversationState;
+        private BotState _userState;
+        
+        void /*make public*/ StateManagementBot(ConversationState conversationState, UserState userState)
+        {
+            _conversationState = conversationState;
+            _userState = userState;
+        }
+
+        //Sends message when a member is added to the conversation
         protected override async Task OnMembersAddedAsync(IList<ChannelAccount> membersAdded, ITurnContext<IConversationUpdateActivity> turnContext, CancellationToken cancellationToken)
         {
             foreach (var member in membersAdded)
