@@ -53,16 +53,34 @@ namespace NewBot1.Bots
             }
         }
 
+
+        //Accesses QnAMaker and Responds
         private async Task AccessQnAMaker(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
         {
             var results = await EchoBotQnA.GetAnswersAsync(turnContext);
-            if (results.Any())
+            if (turnContext.Activity.Text.ToLower() == "what is my name?" || turnContext.Activity.Text.ToLower() == "what's my name?" || turnContext.Activity.Text.ToLower() == "what is my name" || turnContext.Activity.Text.ToLower() == "what's my name" || turnContext.Activity.Text.ToLower() == "do you know my name")
+            {
+                await turnContext.SendActivityAsync(MessageFactory.Text("JGBot responds: It's João Guimarães! Am I right? (Y/n)" ), cancellationToken);
+            }
+            else if (turnContext.Activity.Text.ToLower() == "yes")
+            {
+                await turnContext.SendActivityAsync(MessageFactory.Text("JGBot responds: Nice! Thanks for the feedback!"), cancellationToken);
+            }
+            else if (turnContext.Activity.Text.ToLower() == "no")
+            {
+                await turnContext.SendActivityAsync(MessageFactory.Text("JGBot responds: Oops. What's your name then?"), cancellationToken);
+            }
+            else if (turnContext.Activity.Text.ToLower() == "joão guimarães")
+            {
+                await turnContext.SendActivityAsync(MessageFactory.Text("JGBot responds: Ok! I'll remember that."), cancellationToken);
+            }
+            else if (results.Any())
             {
                 await turnContext.SendActivityAsync(MessageFactory.Text("JGBot responds: " + results.First().Answer), cancellationToken);
             }
             else
             {
-                await turnContext.SendActivityAsync(MessageFactory.Text("Sorry, could not find an answer in the Q and A system."), cancellationToken);
+                await turnContext.SendActivityAsync(MessageFactory.Text("Sorry, your text doesn't make sense to me"), cancellationToken);
             }
         }
 
