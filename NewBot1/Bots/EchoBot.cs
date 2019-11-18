@@ -8,14 +8,26 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
+using System.Linq;
+using Microsoft.Bot.Builder.AI.QnA;
 
 namespace NewBot1.Bots
 {
     public class EchoBot : ActivityHandler
     {
+
+        public QnAMaker EchoBotQnA { get; private set; }
+        public EchoBot(QnAMakerEndpoint endpoint)
+        {
+            // connects to QnA Maker endpoint for each turn
+            EchoBotQnA = new QnAMaker(endpoint);
+        }
+
         protected override async Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
         {
-            await turnContext.SendActivityAsync(CreateActivityWithTextAndSpeak($"Echo: {turnContext.Activity.Text}"), cancellationToken);
+            // First send the user input to your QnA Maker knowledge base
+            await AccessQnAMaker(turnContext, cancellationToken);
+           
         }
 
         protected override async Task OnMembersAddedAsync(IList<ChannelAccount> membersAdded, ITurnContext<IConversationUpdateActivity> turnContext, CancellationToken cancellationToken)
@@ -24,8 +36,21 @@ namespace NewBot1.Bots
             {
                 if (member.Id != turnContext.Activity.Recipient.Id)
                 {
-                    await turnContext.SendActivityAsync(CreateActivityWithTextAndSpeak($"Hello and welcome!"), cancellationToken);
+                    await turnContext.SendActivityAsync(CreateActivityWithTextAndSpeak($"Hello João Guimarães. Ask me anything!"), cancellationToken);
                 }
+            }
+        }
+
+        private async Task AccessQnAMaker(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
+        {
+            var results = await EchoBotQnA.GetAnswersAsync(turnContext);
+            if (results.Any())
+            {
+                await turnContext.SendActivityAsync(MessageFactory.Text("JGBot responds: " + results.First().Answer), cancellationToken);
+            }
+            else
+            {
+                await turnContext.SendActivityAsync(MessageFactory.Text("Sorry, could not find an answer in the Q and A system."), cancellationToken);
             }
         }
 

@@ -10,6 +10,7 @@ using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Bot.Builder.AI.QnA;
 
 using NewBot1.Bots;
 
@@ -28,6 +29,14 @@ namespace NewBot1
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddSingleton(new QnAMakerEndpoint
+            {
+                KnowledgeBaseId = Configuration.GetValue<string>($"QnAKnowledgebaseId"),
+                EndpointKey = Configuration.GetValue<string>($"QnAAuthKey"),
+                Host = Configuration.GetValue<string>($"QnAEndpointHostName")
+            });
+
 
             // Create the Bot Framework Adapter with error handling enabled.
             services.AddSingleton<IBotFrameworkHttpAdapter, AdapterWithErrorHandler>();
