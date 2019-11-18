@@ -80,10 +80,31 @@ namespace NewBot1.Bots
             }
             else
             {
-                await turnContext.SendActivityAsync(MessageFactory.Text("Sorry, your text doesn't make sense to me"), cancellationToken);
+                await turnContext.SendActivityAsync(MessageFactory.Text("What you just wrote doesn't make any sense to me. Sorry man :("), cancellationToken);
             }
         }
 
+        //LUIS setup
+        public class BookingDetails
+        {
+            public string Destination { get; set; }
+
+            public string Origin { get; set; }
+
+            public string TravelDate { get; set; }
+        }
+
+
+        //Making Cards
+        /*
+        private async Task DisplayOptionsAsync(ITurnContext turnContext, CancellationToken cancellationToken)
+        {
+            //Create hero card
+        }
+        */
+
+
+        //Makes speech messages readable by the bot and makes the bot be able to speak
         private IActivity CreateActivityWithTextAndSpeak(string message)
         {
             var activity = MessageFactory.Text(message);
