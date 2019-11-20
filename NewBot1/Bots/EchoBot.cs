@@ -26,7 +26,15 @@ namespace NewBot1.Bots
         protected override async Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
         {
             // First send the user input to your QnA Maker knowledge base
-            await AccessQnAMaker(turnContext, cancellationToken);
+            if (turnContext.Activity.Text.ToString().ToUpper() == turnContext.Activity.Text.ToString())
+            {
+                await turnContext.SendActivityAsync("JGBot responds: DON'T TYPE IN ALL CAPS, IT MAKES MY EARS HURT");
+            }
+            else 
+            {
+                await AccessQnAMaker(turnContext, cancellationToken);
+            }
+            
            
         }
 
